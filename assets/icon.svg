@@ -1,0 +1,12 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black rounded square background -->
+  <rect x="0" y="0" width="512" height="512" rx="140" fill="#111111" />
+  
+  <!-- White lightning bolt (Zap) centered and scaled from 24x24 to 512x512 -->
+  <g transform="translate(64, 64) scale(16)">
+    <path 
+      d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" 
+      fill="#FFFFFF" 
+    />
+  </g>
+</svg>

@@ -10,18 +10,24 @@ const rgbToHex = (rgb: string) => {
   return rgb
 }
 
-export const extractAllFonts = (): string[] => {
-  const elements = document.querySelectorAll('*')
+export const extractAllFonts = (rootElement?: HTMLElement): string[] => {
+  const elements = rootElement ? rootElement.querySelectorAll('*') : document.querySelectorAll('*')
   const fonts = new Set<string>()
 
-  elements.forEach((el) => {
+  // If a root element is provided, we must also check the root element itself
+  const elementsArray = Array.from(elements)
+  if (rootElement) elementsArray.push(rootElement)
+
+  elementsArray.forEach((el) => {
+    // Skip extension UI
+    if (el.tagName.toLowerCase().includes('plasmo') || el.id === 'plasmo-shadow-container') return;
+
     const computed = window.getComputedStyle(el)
     const fontFamily = computed.getPropertyValue('font-family')
     if (fontFamily) {
-      // Clean up the font string (remove quotes)
       const cleanFonts = fontFamily.split(',').map(f => f.trim().replace(/['"]/g, ''))
       if (cleanFonts.length > 0 && cleanFonts[0]) {
-        fonts.add(cleanFonts[0]) // Add primary font in stack
+        fonts.add(cleanFonts[0]) 
       }
     }
   })
@@ -29,25 +35,32 @@ export const extractAllFonts = (): string[] => {
   return Array.from(fonts)
 }
 
-export const extractAllColors = (): string[] => {
-  const elements = document.querySelectorAll('*')
+export const extractAllColors = (rootElement?: HTMLElement): string[] => {
+  const elements = rootElement ? rootElement.querySelectorAll('*') : document.querySelectorAll('*')
   const colors = new Set<string>()
 
   const addColor = (colorString: string) => {
-    // Ignore transparent and basic colors
     if (!colorString || colorString === 'rgba(0, 0, 0, 0)' || colorString === 'transparent') return
-    
-    // Convert to HEX for consistency
     const hex = rgbToHex(colorString).toUpperCase()
+    
+    // Filter out bounding box colors and default browser link blue
+    const ignoredColors = ['#2563EB', '#FF9800', '#4CAF50', '#0000EE', '#0000FF']
+    if (ignoredColors.includes(hex)) return
+
     colors.add(hex)
   }
 
-  elements.forEach((el) => {
+  const elementsArray = Array.from(elements)
+  if (rootElement) elementsArray.push(rootElement)
+
+  elementsArray.forEach((el) => {
+    // Skip extension UI
+    if (el.tagName.toLowerCase().includes('plasmo') || el.id === 'plasmo-shadow-container') return;
+
     const computed = window.getComputedStyle(el)
     addColor(computed.getPropertyValue('color'))
     addColor(computed.getPropertyValue('background-color'))
     
-    // Check borders
     if (computed.getPropertyValue('border-width') !== '0px') {
         addColor(computed.getPropertyValue('border-color'))
     }
