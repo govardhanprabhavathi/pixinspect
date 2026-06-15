@@ -35,7 +35,8 @@
     "activeTab",
     "storage",
     "scripting",
-    "contextMenus"
+    "contextMenus",
+    "downloads"
   ],
   "content_scripts": [
     {
